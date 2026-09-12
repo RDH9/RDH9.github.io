@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building a Custom IDS — RDH</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <section class="hero" style="padding-bottom: 1rem;">
+    <div class="container">
+      <div class="post-header">
+        <div class="meta">August 2026 &middot; Cybersecurity</div>
+        <h1>Building a Custom IDS in Python: Detecting Port Scans and ICMP Floods</h1>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <article class="post-body">
+        <p>For my first serious cybersecurity project, I wanted to build
+        something that showed real engineering, not just "installed Snort and
+        followed a tutorial." So I built a lightweight intrusion detection
+        system from scratch in Python using Scapy.</p>
+
+        <h2>The lab setup</h2>
+        <p>Everything runs in an isolated Proxmox network segment:</p>
+        <ul>
+          <li>Windows Server VM running the IDS (Npcap + Python + Scapy)</li>
+          <li>Kali Linux VM as the attacker, generating real scan/flood traffic</li>
+          <li>Both on a dedicated internal bridge with no physical NIC, so nothing
+          leaks onto the real network</li>
+        </ul>
+
+        <h2>What it detects</h2>
+        <p>The first version detects three classic patterns by tracking
+        per-source-IP behavior in sliding time windows:</p>
+        <ul>
+          <li><strong>Port scans</strong> — many distinct destination ports from
+          one source IP within a short window (SYN packets, tracked with a
+          deque of timestamped ports)</li>
+          <li><strong>ICMP floods</strong> — high volume of ICMP echo requests
+          from a single source in a short window</li>
+          <li><strong>Repeated connection attempts</strong> — many SYNs to the
+          same destination port, a basic brute-force signal</li>
+        </ul>
+
+        <h2>Validating it against real traffic</h2>
+        <p>The whole point was validating detections against actual attack
+        traffic, not just theoretical logic:</p>
+        <pre><code># Port scan
+nmap -sS 10.10.10.10
+
+# ICMP flood
+hping3 --icmp --flood 10.10.10.10
+
+# Repeated connection attempts
+hping3 -S -p 3389 --flood 10.10.10.10</code></pre>
+        <p>Each of these triggered the corresponding alert within a few seconds
+        on the IDS console — a satisfying confirmation that the detection logic
+        actually works against real traffic, not just synthetic test data.</p>
+
+        <h2>What's next</h2>
+        <p>Planned improvements: logging to file/JSON instead of just console
+        output (needed to eventually feed a SIEM), a whitelist for known-good
+        management IPs, and mapping each detection to its corresponding MITRE
+        ATT&amp;CK technique (e.g., port scanning maps to T1046) for the
+        eventual writeup.</p>
+      </article>
+    </div>
+  </section>
+
+  <script src="../js/layout.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPO Inheritance — RDH</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <section class="hero" style="padding-bottom: 1rem;">
+    <div class="container">
+      <div class="post-header">
+        <div class="meta">August 2026 &middot; Active Directory</div>
+        <h1>GPO Inheritance, Block Inheritance, and Enforced — Tested Hands-On</h1>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <article class="post-body">
+        <p>Group Policy inheritance is one of those Active Directory topics that
+        sounds simple on paper but doesn't fully click until you actually break
+        it in a lab. Here's what I found testing it hands-on.</p>
+
+        <h2>The inheritance order</h2>
+        <p>GPOs apply in this order: <strong>Local &rarr; Site &rarr; Domain &rarr; OU</strong>
+        (with nested OUs applying parent-to-child). Settings merge by default,
+        and if two GPOs conflict on the same setting, the one closest to the
+        object wins.</p>
+
+        <h2>Testing Block Inheritance</h2>
+        <p>I created a domain-wide GPO with a login banner, linked at the domain
+        root. Using PowerShell:</p>
+        <pre><code>New-GPO -Name "Domain-Banner-Policy" | New-GPLink -Target $domain
+Set-GPRegistryValue -Name "Domain-Banner-Policy" `
+  -Key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+  -ValueName "legalnoticetext" -Type String -Value "Monitored system"</code></pre>
+        <p>Then I enabled Block Inheritance on a test OU:</p>
+        <pre><code>Set-GPInheritance -Target "OU=Finance,DC=rdhwin,DC=lab" -IsBlocked Yes</code></pre>
+        <p>As expected, the banner GPO stopped applying to that OU.</p>
+
+        <h2>The trap: Enforced beats Block Inheritance</h2>
+        <p>This is the classic gotcha. I set the domain-level GPO to
+        <strong>Enforced</strong>, and it started applying to the Finance OU
+        again — despite Block Inheritance still being active there.</p>
+        <p>The rule to remember: <strong>Enforced always overrides Block
+        Inheritance.</strong> It's an easy thing to get backwards the first
+        time, but it makes sense once you think of Enforced as "this policy is
+        non-negotiable, no matter what's downstream."</p>
+
+        <h2>Delegation of Control &ne; GPOs</h2>
+        <p>One thing I mixed up early on: GPOs configure <em>settings</em> pushed
+        to users/computers. They don't grant <em>permissions</em> to people. If
+        you want a helpdesk group to reset passwords for one OU only, that's
+        <strong>Delegation of Control</strong> — a completely separate AD
+        mechanism that modifies the ACL on the OU itself, not a policy push.</p>
+      </article>
+    </div>
+  </section>
+
+  <script src="../js/layout.js"></script>
+</body>
+</html>

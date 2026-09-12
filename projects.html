@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — RDH</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <section class="hero" style="padding-bottom: 1.5rem;">
+    <div class="container">
+      <p class="eyebrow">Projects</p>
+      <h1>Things I've built</h1>
+      <p class="subtitle">Hands-on labs and projects from my networking, Active Directory, and cybersecurity self-study.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="grid">
+
+        <div class="card">
+          <h3>Custom Network Intrusion Detection System</h3>
+          <p>A Python/Scapy-based IDS running on a Windows Server VM that detects
+          port scans, ICMP floods, and repeated-connection (brute-force-style)
+          patterns in real time, validated against live attack simulations from a
+          Kali Linux attacker VM.</p>
+          <div class="tags">
+            <span class="tag">Python</span>
+            <span class="tag">Scapy</span>
+            <span class="tag">Networking</span>
+            <span class="tag">Security</span>
+          </div>
+          <p class="meta">Lab environment: Proxmox · Windows Server · Kali Linux</p>
+        </div>
+
+        <div class="card">
+          <h3>Active Directory Lab Environment</h3>
+          <p>Built a full AD domain from scratch, including OU design, GPO
+          inheritance and loopback processing, Block Inheritance / Enforced GPO
+          testing, and Delegation of Control for scoped helpdesk-style access —
+          all verified via PowerShell (Get-GPResultantSetOfPolicy, Set-GPInheritance,
+          etc.).</p>
+          <div class="tags">
+            <span class="tag">Active Directory</span>
+            <span class="tag">Group Policy</span>
+            <span class="tag">PowerShell</span>
+          </div>
+          <p class="meta">Lab environment: Proxmox · Windows Server (rdhwin.lab domain)</p>
+        </div>
+
+        <div class="card">
+          <h3>CCNA Networking Labs (Packet Tracer)</h3>
+          <p>A series of hands-on labs covering the full CCNA 200-301 blueprint:
+          VLSM subnetting design, VLANs and 802.1Q trunking with native VLAN
+          mismatch testing, router-on-a-stick inter-VLAN routing, single-area
+          OSPF with intentional adjacency failures diagnosed live, floating
+          static routes, HSRP failover, NAT/PAT, and DHCP relay.</p>
+          <div class="tags">
+            <span class="tag">Cisco IOS</span>
+            <span class="tag">Routing &amp; Switching</span>
+            <span class="tag">Packet Tracer</span>
+          </div>
+          <p class="meta">Status: In progress — working through full 6-domain blueprint</p>
+        </div>
+
+        <div class="card">
+          <h3>AD Attack &amp; Defense Exercises</h3>
+          <p>Hands-on exploration of common Active Directory misconfigurations and
+          attacks (native VLAN mismatches, GPO inheritance edge cases, delegation
+          boundaries) paired with the corresponding defensive fix and
+          verification step — an attack &rarr; understand &rarr; defend &rarr; verify loop.</p>
+          <div class="tags">
+            <span class="tag">Active Directory</span>
+            <span class="tag">Security</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Personal Trackers (Excel)</h3>
+          <p>Small productivity tools built with openpyxl: a reading log tracking
+          title, author, and start/finish dates, and a vintage computer collection
+          tracker logging model, condition, and purchase price — both structured
+          as native Excel tables with filtering.</p>
+          <div class="tags">
+            <span class="tag">Automation</span>
+            <span class="tag">Python</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script src="js/layout.js"></script>
+</body>
+</html>
