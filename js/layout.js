@@ -29,7 +29,6 @@ function loadLayout() {
   </footer>`;
 
   document.body.insertAdjacentHTML("afterbegin", header);
-  document.body.insertAdjacentHTML("beforeend", footer);
 
   document.querySelectorAll("nav a").forEach(link => {
     const page = link.dataset.page;
